@@ -10,7 +10,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.soywiz.korlibs.korge.plugins:korge-gradle-plugin:3.4.0")
+        classpath("com.soywiz.korlibs.korge.plugins:korge-gradle-plugin:2.4.1")
     }
 }
 
