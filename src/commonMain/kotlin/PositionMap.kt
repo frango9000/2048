@@ -8,22 +8,21 @@ enum class Direction {
 }
 
 class PositionMap(private val array: IntArray2 = IntArray2(4, 4, -1)) {
+
     private fun getOrNull(x: Int, y: Int) = if (array.get(x, y) != -1) Position(x, y) else null
 
     private fun getNumber(x: Int, y: Int) = array.tryGet(x, y)?.let { blocks[it]?.number?.ordinal ?: -1 } ?: -1
 
-    operator fun get(x: Int, y: Int) = array[x, y]
-
-    operator fun set(x: Int, y: Int, value: Int) {
-        array[x, y] = value
+    fun hasAvailableMoves(): Boolean {
+        array.each { x, y, _ ->
+            if (hasAdjacentEqualPosition(x, y)) return true
+        }
+        return false
     }
 
-    fun forEach(action: (Int) -> Unit) {
-        array.forEach(action)
+    private fun hasAdjacentEqualPosition(x: Int, y: Int) = getNumber(x, y).let {
+        it == getNumber(x - 1, y) || it == getNumber(x + 1, y) || it == getNumber(x, y - 1) || it == getNumber(x, y + 1)
     }
-
-    fun copy() = PositionMap(array.copy(data = array.data.copyOf()))
-
 
     fun getNotEmptyPositionFrom(direction: Direction, line: Int): Position? {
         when (direction) {
@@ -34,7 +33,7 @@ class PositionMap(private val array: IntArray2 = IntArray2(4, 4, -1)) {
         }
         return null
     }
-    
+
     fun getRandomFreePosition(): Position? {
         val quantity = array.count { it == -1 }
         if (quantity == 0) return null
@@ -51,16 +50,19 @@ class PositionMap(private val array: IntArray2 = IntArray2(4, 4, -1)) {
         return null
     }
 
-    fun hasAvailableMoves(): Boolean {
-        array.each { x, y, _ ->
-            if (hasAdjacentEqualPosition(x, y)) return true
-        }
-        return false
+    operator fun get(x: Int, y: Int) = array[x, y]
+
+    operator fun set(x: Int, y: Int, value: Int) {
+        array[x, y] = value
     }
 
-    private fun hasAdjacentEqualPosition(x: Int, y: Int) = getNumber(x, y).let {
-        it == getNumber(x - 1, y) || it == getNumber(x + 1, y) || it == getNumber(x, y - 1) || it == getNumber(x, y + 1)
+    fun toNumberIds() = IntArray(16) { getNumber(it % 4, it / 4) }
+
+    fun forEach(action: (Int) -> Unit) {
+        array.forEach(action)
     }
+
+    fun copy() = PositionMap(array.copy(data = array.data.copyOf()))
 
     override fun equals(other: Any?): Boolean {
         return (other is PositionMap) && this.array.data.contentEquals(other.array.data)
