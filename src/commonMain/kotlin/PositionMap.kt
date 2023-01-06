@@ -3,6 +3,10 @@ import kotlin.random.*
 
 class Position(val x: Int, val y: Int)
 
+enum class Direction {
+    LEFT, RIGHT, TOP, BOTTOM
+}
+
 class PositionMap(private val array: IntArray2 = IntArray2(4, 4, -1)) {
     private fun getOrNull(x: Int, y: Int) = if (array.get(x, y) != -1) Position(x, y) else null
 

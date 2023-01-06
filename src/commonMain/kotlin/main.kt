@@ -1,4 +1,6 @@
+import com.soywiz.korev.*
 import com.soywiz.korge.*
+import com.soywiz.korge.input.*
 import com.soywiz.korge.view.*
 import com.soywiz.korim.color.*
 import com.soywiz.korim.font.*
@@ -7,6 +9,7 @@ import com.soywiz.korim.text.*
 import com.soywiz.korio.file.std.*
 import com.soywiz.korma.geom.*
 import com.soywiz.korma.geom.vector.*
+import kotlin.collections.set
 import kotlin.properties.*
 import kotlin.random.*
 
@@ -107,6 +110,32 @@ suspend fun main() = Korge(width = 480, height = 640, title = "2048", bgcolor = 
     }
 
     generateBlock()
+
+
+
+    root.keys.down {
+        when (it.key) {
+            Key.LEFT -> moveBlocksTo(Direction.LEFT)
+            Key.RIGHT -> moveBlocksTo(Direction.RIGHT)
+            Key.UP -> moveBlocksTo(Direction.TOP)
+            Key.DOWN -> moveBlocksTo(Direction.BOTTOM)
+            else -> Unit
+        }
+    }
+
+    onSwipe(20.0) {
+        when (it.direction) {
+            SwipeDirection.LEFT -> moveBlocksTo(Direction.LEFT)
+            SwipeDirection.RIGHT -> moveBlocksTo(Direction.RIGHT)
+            SwipeDirection.TOP -> moveBlocksTo(Direction.TOP)
+            SwipeDirection.BOTTOM -> moveBlocksTo(Direction.BOTTOM)
+        }
+    }
+}
+
+fun Stage.moveBlocksTo(direction: Direction) {
+    println(direction)
+    // TODO
 }
 
 fun Container.generateBlock() {
